@@ -32,34 +32,6 @@
                             <img src="/img/hyponome.png" />
                         </a>
                     </div>
-                    @if(@Context.User == null || string.IsNullOrEmpty(@Context.User.Identity.Name))
-                    {
-                        <div class="navbar-text navbar-right">
-                            <a href="@Url.Action("Login", "Account")" class="btn navbar-btn">Sign in</a>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="header header-logged-in true">
-                            <ul class="header-nav user-nav right">
-                                <li class="header-nav-item">
-                                    <a class="header-nav-link name" href="@Context.User.FindFirst("urn:github:url").Value" target="_blank">
-                                        <img alt="@("@" + @Context.User.Identity.Name)" class="avatar" height="20" width="20" src="@Context.User.FindFirst("urn:github:avatar").Value"/>
-                                        <span class="css-truncate">
-                                            <span class="css-truncate-target">
-                                                @Context.User.Identity.Name
-                                            </span>
-                                        </span>
-                                    </a>
-                                </li>
-                                <li class="header-nav-item">
-                                    <a class="header-nav-link" href="@Url.Action("Logout", "Account")">
-                                        <span class="octicon octicon-sign-out"></span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    }
                 </div>
             </nav>
         </header>
@@ -79,21 +51,12 @@
                 </div>
             }
         </div>
-        <div class="pagehead repohead instapaper_ignore readability-menu">
-            <div class="container-fluid">
-                <h1 class="entry-title public">
-                    <span class="mega-octicon octicon-repo"></span>
-                    <span class="author"><span>OctopusDeploy</span></span>
-                    <span class="path-divider">/</span>
-                    <span>Library</span>
-                </h1>
-            </div>
-        </div>
         @RenderBody()
 
         <footer>
-            @Html.Partial("_Footer")
+            @await Html.PartialAsync("_Footer")
         </footer>
+
         <environment names="Development">
             <script src="/lib/jquery/jquery.js"></script>
             <script src="/lib/bootstrap/js/bootstrap.js"></script>

@@ -68,12 +68,10 @@ body {
 }
 
 footer {
-	margin-top: 50px;
-	padding: 10px 0;
-	border: 1px solid #e5e5e5;
-	border-bottom: none;
-	line-height: 30px;
-	color: #666;
+	bottom: 0;
+	margin: 0 auto;
+	width: 100%;
+	position: absolute;
 }
 
 .footer-logo img {

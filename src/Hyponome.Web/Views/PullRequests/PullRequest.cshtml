@@ -11,50 +11,20 @@
 					<h1 class="gh-header-title">
 						<span class="js-issue-title">@Model.Title</span>
 						<span class="gh-header-number">#@Model.Number</span>
+						<a href="@Model.HtmlUrl" class="btn btn-secondary btn-sm" target="_blank">Open on GitHub</a>
 					</h1>
 				</div>
 				<div class="flex-table gh-header-meta">
-					<div class="flex-table-item">
-						<div class="state state-open">
-							<span class="octicon octicon-git-pull-request"></span> Open
-						</div>
-					</div>
 					<div class="flex-table-item flex-table-item-primary">
 						<a href="@Model.User.HtmlUrl" class="author pull-header-username css-truncate css-truncate-target expandable">@Model.User.Login</a> 
-						wants to merge @Model.Commits commits into 
+						wants to merge 
+						<span class="commit-ref current-branch css-truncate expandable">
+							<span class="css-truncate user">@Model.Head.Label</span>
+						</span>
+						into 
 						<span class="commit-ref current-branch css-truncate expandable">
 							<span class="css-truncate-target user">@Model.Base.Label</span>
 						</span>
-						 from 
-						 <span class="commit-ref current-branch css-truncate expandable">
-							 <span class="css-truncate user">@Model.Head.Label</span>
-						 </span>
-					</div>
-				</div>
-				<div class="merge-pr">
-					<div class="branch-action @(@ViewBag.IsMergeable ? "branch-action-state-clean" : "branch-action-state-dirty")">
-						<span class="mega-octicon octicon-git-pull-request branch-action-icon"></span>
-						<span class="mega-octicon octicon-git-merge branch-action-icon"></span>
-						<div class="branch-action-body">
-							<div class="merge-message">
-								<div>
-									<h3 class="merge-branch-heading">
-										@if(@ViewBag.IsMergeable)
-										{
-											<text>
-												This pull request can be automatically merged.
-											</text>
-										}
-										else
-										{
-											<text>
-												We can't automatically merge this pull request.
-											</text>
-										}
-									</h3>
-								</div>
-							</div>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -68,17 +38,6 @@
 						<div class="view-pull-request clearfix">
 							<div class="files-bucket is-visible">
 								<div class="uncommentable">
-									<div class="details-collapse table-of-contents">
-										<div class="toc-diff-stats">
-											<span class="octicon octicon-diff"></span>
-											Showing 
-											<strong>@Model.ChangedFiles changed files</strong>
-											 with 
-											<strong>@Model.Additions additions</strong>
-											 and 
-											<strong>@Model.Deletions deletions</strong>.
-										</div>
-									</div>
 									<div class="diff-view">
 										@foreach(var file in @ViewBag.Files) {
 											<div class="file show-inline-notes">
