@@ -57,8 +57,6 @@ jobs:
       matrix:
         platform:
           - linux/amd64
-          - linux/arm/v6
-          - linux/arm/v7
           - linux/arm64
 
     permissions:
@@ -103,6 +101,7 @@ jobs:
           build-args: |
             APP_VERSION=${{ needs.calculate-version.outputs.app_version }}
             APP_INFO_VERSION=${{ needs.calculate-version.outputs.app_info_version }}
+            TARGET_ARCH=${{ matrix.platform }}
           push: ${{ github.event_name != 'pull_request' }}  
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
