@@ -49,7 +49,6 @@ jobs:
 
       - name: Install OctoVersion
         run: |
-          dotnet new tool-manifest
           dotnet tool install OctoVersion.Tool
 
       - name: Calculate Version
