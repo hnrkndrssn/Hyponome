@@ -2,16 +2,16 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 8080
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS publish
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS publish
 ARG APP_VERSION=0.0.0-local
 ARG APP_INFO_VERSION=${APP_VERSION}
-ARG TARGET_ARCH="amd64"
+ARG TARGET_ARCH="linux/amd64"
 
 WORKDIR /src
 COPY src/ .
 
 WORKDIR /src/Hyponome.Web
-RUN dotnet publish -c Release -o /app/publish -p:Version=${APP_VERSION} -p:InformationalVersion=${APP_INFO_VERSION} -r linux-${TARGET_ARCH}
+RUN dotnet publish -c Release -o /app/publish -p:Version=${APP_VERSION} -p:InformationalVersion=${APP_INFO_VERSION} --arch ${TARGET_ARCH}
 
 FROM base AS final
 WORKDIR /app
