@@ -86,10 +86,3 @@ jobs:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
-
-      - name: Create a release in Octopus Deploy
-        uses: OctopusDeploy/create-release-action@v3
-        with:
-          project: 'Hyponome'
-          release_number: ${{ steps.calculate_version.outputs.octoversion_fullsemver }}
-          package_version: ${{ steps.calculate_version.outputs.octoversion_fullsemver }}
