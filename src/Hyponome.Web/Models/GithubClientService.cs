@@ -20,8 +20,24 @@ public class GitHubClientService : IGitHubClientService
     {
         this.logger = logger;
         Options = optionsAccessor.Value;
-        if (!string.IsNullOrWhiteSpace(Options.AuthToken)) githubClient.Credentials = new Credentials(Options.AuthToken);
+        SetCredentials();
+    }
 
+    void SetCredentials()
+    {
+        var authToken = Options.AuthToken;
+        if (!string.IsNullOrWhiteSpace(authToken)) 
+        {
+            githubClient.Credentials = new Credentials(authToken);
+            return;
+        }
+
+        authToken = Environment.GetEnvironmentVariable("GITHUB_PAT");
+        if (!string.IsNullOrWhiteSpace(authToken))
+        {
+            githubClient.Credentials = new Credentials(authToken);
+            return;
+        }
     }
 
     public async Task<List<Issue>> GetPullRequests()
