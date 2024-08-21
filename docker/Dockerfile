@@ -5,6 +5,7 @@ EXPOSE 8080
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS publish
 ARG APP_VERSION=0.0.0-local
 ARG APP_INFO_VERSION=${APP_VERSION}
+ARG TARGETARCH
 
 WORKDIR /src
 COPY src/ .
