@@ -13,7 +13,7 @@ WORKDIR /src
 COPY src/ .
 
 WORKDIR /src/Hyponome.Web
-RUN dotnet publish -c Release -o /app/publish -p:Version=${APP_VERSION} -p:InformationalVersion=${APP_INFO_VERSION} --arch ${TARGET_ARCH}
+RUN dotnet publish -c Release -o /app/publish -p:Version=${APP_VERSION} -p:InformationalVersion=${APP_INFO_VERSION}
 
 FROM --platform=$BUILDPLATFORM base AS final
 WORKDIR /app
