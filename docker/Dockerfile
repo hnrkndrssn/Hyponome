@@ -6,13 +6,11 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS publish
 ARG APP_VERSION=0.0.0-local
 ARG APP_INFO_VERSION=${APP_VERSION}
 
-RUN echo Building for architecture ${TARGET_ARCH}
-
 WORKDIR /src
 COPY src/ .
 
 WORKDIR /src/Hyponome.Web
-RUN dotnet publish -c Release -o /app/publish -p:Version=${APP_VERSION} -p:InformationalVersion=${APP_INFO_VERSION} -a $TARGETARCH
+RUN dotnet publish -c Release -o /app/publish -p:Version=${APP_VERSION} -p:InformationalVersion=${APP_INFO_VERSION} -a ${TARGETARCH}
 
 FROM --platform=$BUILDPLATFORM base AS final
 WORKDIR /app
