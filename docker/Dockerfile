@@ -15,7 +15,7 @@ COPY src/ .
 WORKDIR /src/Hyponome.Web
 RUN dotnet publish -c Release -o /app/publish -p:Version=${APP_VERSION} -p:InformationalVersion=${APP_INFO_VERSION} --arch ${TARGET_ARCH}
 
-FROM base AS final
+FROM --platform=$BUILDPLATFORM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
