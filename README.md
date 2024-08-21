@@ -1,6 +1,6 @@
 ## Hyponome
 
-The OctopusDeploy / Library Pull Request review tool
+The [OctopusDeploy/Library](https://github.com/OctopusDeploy/Library) Pull Request review tool
 
 ## Usage
 
