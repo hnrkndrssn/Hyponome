@@ -6,6 +6,7 @@ The OctopusDeploy / Library Pull Request review tool
 
 To start the app run the following `docker` command:
 ```
+docker pull ghcr.io/hnrkndrssn/hyponome:main
 docker run --rm -p 8000:8080 -it ghcr.io/hnrkndrssn/hyponome:main
 ```
 
