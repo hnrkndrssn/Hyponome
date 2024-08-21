@@ -16,13 +16,8 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-
 env:
   REGISTRY: ghcr.io
-
-  OCTOPUS_URL: ${{ vars.SERVER }}
-  OCTOPUS_API_KEY: ${{ secrets.API_KEY }}
-  OCTOPUS_SPACE: ${{ vars.SPACE }}
 
 jobs:
   calculate-version:
