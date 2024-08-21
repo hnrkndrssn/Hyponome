@@ -104,7 +104,6 @@ jobs:
           build-args: |
             APP_VERSION=${{ needs.calculate-version.outputs.app_version }}
             APP_INFO_VERSION=${{ needs.calculate-version.outputs.app_info_version }}
-            TARGET_ARCH=${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,name=${{ env.REGISTRY }}/${{ env.REPO }},push-by-digest=true,name-canonical=true,push=${{ github.event_name != 'pull_request' }}
       
