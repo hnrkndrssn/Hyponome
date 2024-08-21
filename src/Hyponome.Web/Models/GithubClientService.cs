@@ -13,7 +13,7 @@ public interface IGitHubClientService
 public class GitHubClientService : IGitHubClientService
 {
     readonly ILogger<GitHubClientService> logger;
-    readonly GitHubClient githubClient = new GitHubClient(new ProductHeaderValue("Hyponome", "2.0"));
+    readonly GitHubClient githubClient = new(new ProductHeaderValue("Hyponome", "2.0"));
     readonly GitHubOptions Options;
 
     public GitHubClientService(ILogger<GitHubClientService> logger, IOptions<GitHubOptions> optionsAccessor)
