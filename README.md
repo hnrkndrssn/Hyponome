@@ -4,13 +4,15 @@ The [OctopusDeploy/Library](https://github.com/OctopusDeploy/Library) Pull Reque
 
 ## Usage
 
-To start the app run the following `docker` command:
+Start Hyponome
 ```
 docker pull ghcr.io/hnrkndrssn/hyponome:main
 docker run --rm -p 8000:8080 -it ghcr.io/hnrkndrssn/hyponome:main
 ```
 
 Open [http://localhost:8000](http://localhost:8000).
+
+---
 
 <img width="1094" alt="dashboard" src="https://github.com/user-attachments/assets/1e038de7-615b-4e0d-bdd0-f8fd1783b287">
 
