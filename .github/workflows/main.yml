@@ -189,12 +189,3 @@ jobs:
         images: ${{ env.REGISTRY }}/${{ needs.build-and-push-image.outputs.repo }}
         tags: |
           type=sha,enable=true,format=short,prefix=
-
-    - name: Deploy to Azure Web App
-      id: deploy-to-webapp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'hyponome-web-dev'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_8c2570a67b274d07b315314e8b8cd7ed }}
-        images: '${{ env.REGISTRY }}/${{ needs.build-and-push-image.outputs.repo }}:${{ steps.meta.outputs.version }}'
