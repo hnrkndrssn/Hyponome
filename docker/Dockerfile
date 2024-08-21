@@ -7,6 +7,8 @@ ARG APP_VERSION=0.0.0-local
 ARG APP_INFO_VERSION=${APP_VERSION}
 ARG TARGET_ARCH="amd64"
 
+RUN echo Building for architecture ${TARGET_ARCH}
+
 WORKDIR /src
 COPY src/ .
 
