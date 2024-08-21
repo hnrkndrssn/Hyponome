@@ -56,7 +56,9 @@ jobs:
       matrix:
         platform:
           - amd64
-          - arm64/v8
+          - arm/v6
+          - arm/v7
+          - arm64
 
     permissions:
       contents: read
