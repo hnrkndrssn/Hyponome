@@ -10,7 +10,7 @@ docker pull ghcr.io/hnrkndrssn/hyponome:main
 docker run --rm -p 8000:8080 -it ghcr.io/hnrkndrssn/hyponome:main
 ```
 
-Then open `http://localhost:8000` in a browser.
+Then open [](http://localhost:8000) in a browser.
 
 <img width="1094" alt="dashboard" src="https://github.com/user-attachments/assets/1e038de7-615b-4e0d-bdd0-f8fd1783b287">
 
