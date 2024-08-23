@@ -78,10 +78,10 @@
 @section scripts {
 	<script>
 		var diffEditor;
-		var showNewScript = function(script) {
+		var showNewScript = function(script, scriptSyntax) {
 			if(!diffEditor) {
 				diffEditor = ace.edit("acediff-left-editor");
-				diffEditor.getSession().setMode('ace/mode/powershell');
+				diffEditor.getSession().setMode(`ace/mode/${scriptSyntax}`);
 				diffEditor.setTheme('ace/theme/monokai');
 				diffEditor.getSession().setUseWrapMode(false);
 				diffEditor.setReadOnly(true);
@@ -94,9 +94,9 @@
 			diffEditor.getSession().setValue(script);
 		}
 		
-		var showModifiedScript = function(oldScript, newScript) {
+		var showModifiedScript = function(oldScript, newScript, scriptSyntax) {
 			var aceDiffer = new AceDiff({
-		        mode: "ace/mode/powershell",
+		        mode: `ace/mode/${scriptSyntax}`,
 				theme: "ace/theme/monokai",
 				maxLines: Infinity,
 				showConnectors: true,
@@ -115,6 +115,12 @@
 		}
 		
 		var stepTemplateScriptProperties = ["Octopus.Action.Script.ScriptBody", "Octopus.Action.Terraform.Template"];
+
+		var getScriptSyntax = function(scriptProperty) {
+			if(scriptProperty.includes("Terraform")) return "terraform";
+
+			return "powershell";
+		}
 
 		var showScript = function(editorId) {
 			var editor = ace.edit(editorId);
@@ -140,7 +146,7 @@
 					newText = newText.substr(0, newText.length - 1);
 				}
 				var newScriptBody = JSON.parse("{" + newText.substr(1) + "}")[scriptProperty];
-				showNewScript(newScriptBody);
+				showNewScript(newScriptBody, getScriptSyntax(scriptProperty));
 			} else {
 				editor.findNext();
 				var second = editor.getSelectionRange();
@@ -157,7 +163,7 @@
 				var oldScriptBody = JSON.parse("{" + oldText.substr(1) + "}")[scriptProperty];
 				var newScriptBody = JSON.parse("{" + newText.substr(1) + "}")[scriptProperty];
 
-				showModifiedScript(oldScriptBody, newScriptBody);
+				showModifiedScript(oldScriptBody, newScriptBody, getScriptSyntax(scriptProperty));
 			
 				$("#acediff-left-editor").show();
 				$("#acediff-gutter").show();
