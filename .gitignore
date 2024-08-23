@@ -398,3 +398,4 @@ FodyWeavers.xsd
 *.sln.iml
 
 appsettings.Local.json
+.DS_Store
