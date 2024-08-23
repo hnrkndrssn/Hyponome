@@ -114,20 +114,58 @@
 		    });
 		}
 		
-		var stepTemplateScriptProperties = ["Octopus.Action.Script.ScriptBody", "Octopus.Action.Terraform.Template"];
+		var stepTemplateScriptSyntaxProperty = "Octopus.Action.Script.Syntax";
+		var stepTemplateTerraformTemplateProperty = "Octopus.Action.Terraform.Template";
+		var stepTemplateScriptProperties = ["Octopus.Action.Script.ScriptBody", stepTemplateTerraformTemplateProperty];
 
-		var getScriptSyntax = function(scriptProperty) {
-			if(scriptProperty.includes("Terraform")) return "terraform";
+		var getScriptSyntax = function(editor) {
+			var scriptSyntaxOccurrences = editor.findAll(`"${stepTemplateScriptSyntaxProperty}":`, {
+				backwards: false,
+				wrap: false,
+				caseSensitive: false,
+				wholeWord: false,
+				regExp: false
+			});
+			if (scriptSyntaxOccurrences > 0) {
+				var scriptSyntaxText = editor.session.getLine(editor.getSelectionRange().start.row)
+				if (scriptSyntaxText.endsWith(",")) {
+					scriptSyntaxText = scriptSyntaxText.substr(0, scriptSyntaxText.length - 1);
+				}
+				var scriptSyntax = JSON.parse("{" + scriptSyntaxText.substr(1) + "}")[stepTemplateScriptSyntaxProperty];
+				if (scriptSyntax === undefined) return "powershell";
+				
+				scriptSyntax = scriptSyntax.toLowerCase();
+				switch(scriptSyntax) {
+					case "bash":
+						return "sh";
+					default:
+						return scriptSyntax;
+				}
+			}
+
+			var terraformTemplateOccurrences = editor.findAll(`"${stepTemplateTerraformTemplateProperty}":`, {
+				backwards: false,
+				wrap: false,
+				caseSensitive: false,
+				wholeWord: false,
+				regExp: false
+			});
+			if (terraformTemplateOccurrences > 0) {
+				return "terraform";
+			}
 
 			return "powershell";
 		}
 
 		var showScript = function(editorId) {
 			var editor = ace.edit(editorId);
+
+			var scriptSyntax = getScriptSyntax(editor);
+
 			var occurrences, scriptProperty;
 			for(var i = 0; i < stepTemplateScriptProperties.length; i++) {
 				scriptProperty = stepTemplateScriptProperties[i];
-				occurrences = editor.findAll(`"${scriptProperty}":`,{
+				occurrences = editor.findAll(`"${scriptProperty}":`, {
 					backwards: false,
 					wrap: false,
 					caseSensitive: false,
@@ -146,7 +184,7 @@
 					newText = newText.substr(0, newText.length - 1);
 				}
 				var newScriptBody = JSON.parse("{" + newText.substr(1) + "}")[scriptProperty];
-				showNewScript(newScriptBody, getScriptSyntax(scriptProperty));
+				showNewScript(newScriptBody, scriptSyntax);
 			} else {
 				editor.findNext();
 				var second = editor.getSelectionRange();
@@ -163,7 +201,7 @@
 				var oldScriptBody = JSON.parse("{" + oldText.substr(1) + "}")[scriptProperty];
 				var newScriptBody = JSON.parse("{" + newText.substr(1) + "}")[scriptProperty];
 
-				showModifiedScript(oldScriptBody, newScriptBody, getScriptSyntax(scriptProperty));
+				showModifiedScript(oldScriptBody, newScriptBody, scriptSyntax);
 			
 				$("#acediff-left-editor").show();
 				$("#acediff-gutter").show();
@@ -183,14 +221,6 @@
 				editor.setReadOnly(true);
 				editor.setOptions({ maxLines: Infinity });
 			});
-			
-			$('.merge-branch-action').click(function () {
-				$('.merge-pr').addClass('open');
-			});
-			
-			$('.commit-form-actions :button[type!="submit"]').click(function () {
-				$('.merge-pr').removeClass('open');
-			})
 		});
 	</script>
 
