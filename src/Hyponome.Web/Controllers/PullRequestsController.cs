@@ -36,8 +36,33 @@ public class PullRequestsController : Controller
     private async Task<ActionResult> BuildView(PullRequest pullRequest)
     {
         var pullRequestFiles = await githubClientService.GetPullRequestFiles(pullRequest.Number);
-        ViewBag.Files = pullRequestFiles;
+        var filesWithPatch = pullRequestFiles.Where(f => !string.IsNullOrEmpty(f.Patch)).ToList();
+        foreach(var file in pullRequestFiles.Except(filesWithPatch))
+        {
+            var fileWithPatch = new PullRequestFile(
+                file.Sha,
+                file.FileName,
+                file.Status,
+                file.Additions,
+                file.Deletions,
+                file.Changes,
+                file.BlobUrl,
+                file.RawUrl,
+                file.ContentsUrl, 
+                await GetFilePatch(pullRequest.Number, file.FileName),
+                file.PreviousFileName
+            );
+
+            filesWithPatch.Add(fileWithPatch);
+        }
+        ViewBag.Files = filesWithPatch;
 
         return View("PullRequest", pullRequest);
+    }
+
+    async Task<string> GetFilePatch(int number, string fileName)
+    {
+        return (await githubClientService.GetFilePatch(number, fileName)) ?? "";
+
     }
 }

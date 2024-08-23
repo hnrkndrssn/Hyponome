@@ -11,7 +11,7 @@
 					<h1 class="gh-header-title">
 						<span class="js-issue-title">@Model.Title</span>
 						<span class="gh-header-number">#@Model.Number</span>
-						<a href="@Model.HtmlUrl" class="btn btn-secondary btn-sm" target="_blank">Open on GitHub</a>
+						<a href="@Model.HtmlUrl" class="btn btn-sm" target="_blank">Open on GitHub</a>
 					</h1>
 				</div>
 				<div class="flex-table gh-header-meta">
@@ -114,15 +114,21 @@
 		    });
 		}
 		
+		var stepTemplateScriptProperties = ["Octopus.Action.Script.ScriptBody", "Octopus.Action.Terraform.Template"];
+
 		var showScript = function(editorId) {
 			var editor = ace.edit(editorId);
-			var occurrences = editor.findAll('Octopus.Action.Script.ScriptBody',{
-			    backwards: false,
-			    wrap: false,
-			    caseSensitive: false,
-			    wholeWord: false,
-			    regExp: false
-			});
+			var occurrences, scriptProperty;
+			for(var i = 0; i < stepTemplateScriptProperties.length; i++) {
+				scriptProperty = stepTemplateScriptProperties[i];
+				occurrences = editor.findAll(`"${scriptProperty}":`,{
+					backwards: false,
+					wrap: false,
+					caseSensitive: false,
+					wholeWord: false,
+					regExp: false
+				});
+			}
 			
 			var first = editor.getSelectionRange();
 			if(occurrences === 1) {
@@ -130,7 +136,7 @@
 				if(newText.endsWith(',')) {
 					newText = newText.substr(0, newText.length - 1);
 				}
-				var newScriptBody = JSON.parse("{" + newText.substr(1) + "}")["Octopus.Action.Script.ScriptBody"];
+				var newScriptBody = JSON.parse("{" + newText.substr(1) + "}")[scriptProperty];
 				showNewScript(newScriptBody);
 			} else {
 				editor.findNext();
@@ -145,8 +151,8 @@
 				if(newText.endsWith(',')) {
 					newText = newText.substr(0, newText.length - 1);
 				}
-				var oldScriptBody = JSON.parse("{" + oldText.substr(1) + "}")["Octopus.Action.Script.ScriptBody"];
-				var newScriptBody = JSON.parse("{" + newText.substr(1) + "}")["Octopus.Action.Script.ScriptBody"];
+				var oldScriptBody = JSON.parse("{" + oldText.substr(1) + "}")[scriptProperty];
+				var newScriptBody = JSON.parse("{" + newText.substr(1) + "}")[scriptProperty];
 
 				showModifiedScript(oldScriptBody, newScriptBody);
 			

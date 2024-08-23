@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.Extensions.Options;
 using Octokit;
 
@@ -8,6 +9,7 @@ public interface IGitHubClientService
     Task<List<Issue>> GetPullRequests();
     Task<PullRequest> GetPullRequest(int number);
     Task<IReadOnlyList<PullRequestFile>> GetPullRequestFiles(int number);
+    Task<string> GetFilePatch(int number, string fileName);
 }
 
 public class GitHubClientService : IGitHubClientService
@@ -56,5 +58,29 @@ public class GitHubClientService : IGitHubClientService
     public async Task<IReadOnlyList<PullRequestFile>> GetPullRequestFiles(int number)
     {
         return await githubClient.PullRequest.Files(Options.OrganizationName, Options.RepositoryName, number);
+    }
+
+    public async Task<string> GetFilePatch(int number, string fileName)
+    {
+        var response = await githubClient.Connection.Get<string>(
+            new Uri($"repos/{Options.OrganizationName}/{Options.RepositoryName}/pulls/{number}", UriKind.Relative), null, "application/vnd.github.diff");
+
+
+        return GetFilePatch(response.Body, fileName);
+    }
+
+    string GetFilePatch(string prDiff, string fileName)
+    {
+        var split = prDiff.Split("diff --git ", StringSplitOptions.RemoveEmptyEntries);
+        var filePatch = split.FirstOrDefault(s => s.StartsWith($"a/{fileName}"));
+        if(string.IsNullOrEmpty(filePatch)) return string.Empty;
+
+        var patchLines = filePatch.Split("\n").Skip(4);
+        if (patchLines.Count() > 1)
+        {
+            return string.Join("\n", patchLines);
+        }
+
+        return prDiff;
     }
 }
